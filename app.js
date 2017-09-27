@@ -3,7 +3,7 @@ const path = require('path')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const index = require('./routes/index')
+const index = require('./api/index')
 const cors = require('cors')
 const app = express()
 
