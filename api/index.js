@@ -24,12 +24,14 @@ router.get('/', function(req, res) {
         const URL1 = `${baseURL}${pageID}/${pageFields}${URLsuffix}`
         const URL2 = `${baseURL}${pageID}/${eventFields}${URLsuffix}`
 
-        const pageData = await fetch(URL1).then(res=>res.json())
+        const pageData = await fetch(URL1).then(res=>res.json()).catch(err => { console.log(err) })
+        console.log(pageData.error)
         const eventData = await fetch(URL2).then(res=>res.json())
+        console.log(eventData.error)
         data.push({pageData, eventData})
         // return pageData
-        console.log(data);
-        
+        // console.log(data);
+
       })()
     }
   })()
