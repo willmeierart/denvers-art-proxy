@@ -73,7 +73,7 @@ router.get('/test', (req, res) => {
       // .catch(err => {
       // console.log(err)
       // return err
-    })
+    // })
   })()
 
   
