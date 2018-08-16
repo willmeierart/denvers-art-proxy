@@ -75,6 +75,8 @@ router.get('/test', (req, res) => {
       return
     })
   })()
+
+  
   return getGalleryInfo
 })
 // router.get('/page/:id', function(req, res) {
