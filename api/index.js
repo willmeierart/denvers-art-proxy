@@ -68,11 +68,11 @@ router.get('/test', (req, res) => {
   const getGalleryInfo = (() => {
     const URL = `${baseURL}${fakeID}/${fakeFields}${fakeURLsuffix}`
     return fetch(URL)
-      .then(res => res.json())
+      // .then(res => res.json())
       // .then(json => res.json(json))
-      .catch(err => {
-      console.log(err)
-      return
+      // .catch(err => {
+      // console.log(err)
+      // return err
     })
   })()
 
