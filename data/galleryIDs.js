@@ -23,4 +23,6 @@ const galleryIDs = {
     "Vicki Myhren Gallery": "171767208758"
 }
 
-module.exports = galleryIDs
+const fakeID = 248777792610992
+
+module.exports = { galleryIDs, fakeID }
