@@ -1,7 +1,10 @@
 const express = require('express')
 const router = express.Router()
+const FB = require('fb')
 const fetch = require('node-fetch')
 require('dotenv').config()
+
+const cache = require('../cache')
 
 const data = require('../data/galleryIDs')
 const galleryIDs = data.galleryIDs
@@ -13,43 +16,58 @@ const FB_ID = process.env.FB_ID
 const FAKE_FB_ID = process.env.FAKE_FB_ID
 const FAKE_APP_SECRET = process.env.FAKE_APP_SECRET
 
+const accessToken = process.env.APP_ID + '|' + process.env.APP_SECRET
+
 const URLsuffix = `&access_token=${FB_ID}|${APP_SECRET}`
-const fakeURLsuffix = `&access_token=${process.env.FAKE_APP_SECRET}`
+// const fakeURLsuffix = `&access_token=${process.env.FAKE_APP_SECRET}`
 
 const pageFields = '?fields=id,about,cover,description,location,mission,name,website'
 const eventFields = '/events?fields=owner,name,id,cover,description,place,start_time,end_time'
-const fakeFields = '?fields=id,name,events{cover,end_time,id,event_times,start_time,place,owner,name,description},about,description,mission,location,cover'
+const allFields = '?fields=id,name,events{cover,end_time,id,event_times,start_time,place,owner,name,description},about,description,mission,location,cover'
 
 // endpoint?key=value
 
-router.get('/', function(req, res) {
-  const getFBdata=(()=>{
-    const data = []
-      for (let gallery in galleryIDs){
-        let pageID = galleryIDs[gallery]
 
-        const getGalleryInfo=(async()=>{
-          const URL1 = `${baseURL}${pageID}/${pageFields}${URLsuffix}`
-          const URL2 = `${baseURL}${pageID}/${eventFields}${URLsuffix}`
 
-          const pageData = await fetch(URL1).then(res=>res.json()).catch(err => { console.log(err) })
-          console.log(pageData.error)
-          const eventData = await fetch(URL2).then(res=>res.json())
-          console.log(eventData.error)
-          data.push({pageData, eventData})
-          // return pageData
-          // console.log(data);
-        })()
-      }
-  })()
-  return data
+router.get('/', cache(1000), async (req, res) => {
+  FB.setAccessToken(accessToken)
+
+  const methods = Object.keys(galleryIDs).map(key => (
+    { method: 'get', relative_url: `${galleryIDs[key]}${pageFields}` }
+  ))
+  
+  const data = await FB.api('', 'post', { batch: methods })
+
+  console.log(data)
+
+  return res.json(data)
+  // const getFBdata=(()=>{
+  //   const data = []
+  //     for (let gallery in galleryIDs){
+  //       let pageID = galleryIDs[gallery]
+
+  //       const getGalleryInfo=(async()=>{
+  //         const URL1 = `${baseURL}${pageID}/${pageFields}${URLsuffix}`
+  //         const URL2 = `${baseURL}${pageID}/${eventFields}${URLsuffix}`
+
+  //         const pageData = await fetch(URL1).then(res=>res.json()).catch(err => { console.log(err) })
+  //         console.log(pageData.error)
+  //         const eventData = await fetch(URL2).then(res=>res.json())
+  //         console.log(eventData.error)
+  //         data.push({pageData, eventData})
+  //         // return pageData
+  //         // console.log(data);
+  //       })()
+  //     }
+  // })()
+  // return data
 })
 
 router.get('/test', (req, res) => {
   // const getGalleryInfo = async (() => {
   //   const data = []
 
-  //   const URL = `${baseURL}${fakeID}/${fakeFields}${fakeURLsuffix}`
+  //   const URL = `${baseURL}${fakeID}/${allFields}${fakeURLsuffix}`
 
   //   const returnedData = await fetch(URL).then(res => res.json()).catch(err => {
   //     console.log(err)
@@ -66,7 +84,7 @@ router.get('/test', (req, res) => {
   //   return JSON.stringify({ data })
   // })()
   const getGalleryInfo = (() => {
-    const URL = `${baseURL}${fakeID}/${fakeFields}${fakeURLsuffix}`
+    const URL = `${baseURL}${fakeID}/${allFields}${fakeURLsuffix}`
     return fetch(URL)
       .then(res => res.json())
       .then(json => res.json(json))
