@@ -29,7 +29,7 @@ const allFields = '?fields=id,name,events{cover,end_time,id,event_times,start_ti
 
 
 
-router.get('/', cache(1000), async (req, res) => {
+router.get('/', cache(10000), async (req, res) => {
   FB.setAccessToken(accessToken)
 
   const methods = Object.keys(galleryIDs).map(key => (
