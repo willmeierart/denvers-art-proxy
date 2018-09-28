@@ -21,8 +21,11 @@ const accessToken = process.env.APP_ID + '|' + process.env.APP_SECRET
 const URLsuffix = `&access_token=${FB_ID}|${APP_SECRET}`
 // const fakeURLsuffix = `&access_token=${process.env.FAKE_APP_SECRET}`
 
-const pageFields = '?fields=id,about,cover,description,location,mission,name,website'
+// const pageFields = '?fields=id,about,cover,description,location,mission,name,website'
+const pageFields =
+  '?fields=id,name,about,bio,cover,description,current_location,contact_address,emails,features,general_info,hours,link,location,mission,website,events{cover,end_time,id,event_times,start_time,place,owner,name,description},photos{images,picture}'
 const eventFields = '/events?fields=owner,name,id,cover,description,place,start_time,end_time'
+
 const allFields = '?fields=id,name,events{cover,end_time,id,event_times,start_time,place,owner,name,description},about,description,mission,location,cover'
 
 // endpoint?key=value
